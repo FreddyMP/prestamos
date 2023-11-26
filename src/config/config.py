@@ -7,7 +7,6 @@ def exist(nombre):
 
     existencia_db = f"SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = '{nombre}'"
 
-    
     try:
         cursor.execute(existencia_db)
 
