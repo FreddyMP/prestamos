@@ -1,4 +1,5 @@
 import pymysql
+import hashlib
 
 def exist(nombre):
     db = pymysql.connect(host='127.0.0.1', port=3306, user='root', password='')
@@ -35,7 +36,21 @@ def conec_exit(nombre):
         db = pymysql.connect(host = '127.0.0.1', port = 3306, user = 'root', password = '')
         cursor =  db.cursor(pymysql.cursors.DictCursor)
         return {'cursor':cursor, 'connection': db} 
+    
+def encriptar(texto_plano):
+    # Crear un objeto hash SHA-256
+    sha256 = hashlib.sha256()
 
+    # Convertir el texto a bytes (ya que el hash se calcula en bytes)
+    texto_bytes = texto_plano.encode('utf-8')
+
+    # Actualizar el objeto hash con los bytes del texto
+    sha256.update(texto_bytes)
+
+    # Obtener el hash en formato hexadecimal
+    hash_resultado = sha256.hexdigest()
+
+    return hash_resultado
 
 
    

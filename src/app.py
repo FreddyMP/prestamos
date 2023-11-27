@@ -1,7 +1,7 @@
 from flask import Flask, request, jsonify
 from config.config import exist, conec_exit
 from models.empresas import list_all, create_db
-from models.usuarios import create_usuarios
+from models.usuarios import create_user, read_all_users
 app = Flask(__name__)
 
 @app.route("/exist/<empresa>/")
@@ -38,12 +38,18 @@ def add_usuario():
             creado_por = data['creado_por']
             rol = data['rol']
             cliente = data['cliente']
-            create = create_usuarios(correo, nombre, contrasena, creado_por, rol, cliente)
+            create = create_user(correo, nombre, contrasena, creado_por, rol, cliente)
             return create
         else:
             return jsonify({"error": "Datos JSON incompletos."}), 400
     else:
         return jsonify({"error": "Solicitud no contiene datos JSON."}), 400
+    
+@app.route("/list_usuarios/<cliente>/")
+def list_usuarios(cliente):
+    usuarios =  read_all_users(cliente)
+    return usuarios
+      
 
 if __name__ == '__main__':
     app.run(port = 3000, debug=True)
