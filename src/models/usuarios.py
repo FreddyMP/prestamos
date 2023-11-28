@@ -1,5 +1,5 @@
 from config.config import conec_exit, encriptar
-
+from datetime import datetime
 def create_user(correo, nombre, contrasena, rol, creado_por, cliente):
     try:
         cursor = conec_exit(cliente)
@@ -43,14 +43,40 @@ def read_all_users(cliente):
         
         return result
 
-def update_user(id_user, correo, nombre, contrasena, rol, cliente):
-     
-    cursor = conec_exit(cliente)
-    pre_fix = "db_"
-    name_db = "USE "+pre_fix + cliente
-    cursor['cursor'].execute(name_db)
+def read_find_users(cliente, filtro):
+        try:
+            cursor = conec_exit(cliente)
+            pre_fix = "db_"
+            name_db = "USE "+pre_fix + cliente
+            cursor['cursor'].execute(name_db)
 
-    update_user_sql = f"UPDATE usuarios SET correo ='{correo}', nombre = '{nombre}', contrasena = '{contrasena}', id_rol = {rol} "
+            search_sql = f"SELECT * FROM usuarios where nombre like '%{filtro}%'"
+            cursor['cursor'].execute(search_sql)
+
+            result = cursor['cursor'].fetchall()
+            
+            return result
+        except:
+            return {"Resultado":f"Error buscando '{filtro}'"}
+        
+def update_user(id_user, user_log, cliente, correo, nombre, contrasena, rol):
+    try:
+        cursor = conec_exit(cliente)
+        pre_fix = "db_"
+        name_db = "USE "+pre_fix + cliente
+        cursor['cursor'].execute(name_db)
+
+        fecha_update = datetime.now()
+        password = encriptar(contrasena)
+
+        update_user_sql = f"UPDATE usuarios SET correo ='{correo}', nombre = '{nombre}', contrasena = '{password}', id_rol = {rol}, modificado_por = {user_log}, fecha_modificacion = '{fecha_update}' where id = {id_user} "
+
+        cursor['cursor'].execute(update_user_sql)
+        cursor['connection'].commit()
+
+        return {"resultado":"ok"}
+    except:
+        return {"resultado":"Error al actualizar los datos"}
 
 
     
