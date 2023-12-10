@@ -36,7 +36,7 @@ def read_all_users(cliente):
         name_db = "USE "+pre_fix + cliente
         cursor['cursor'].execute(name_db)
 
-        search_sql = """SELECT * FROM usuarios"""
+        search_sql = "SELECT * FROM usuarios where eliminado_por is null and fecha_eliminacion is null "
         cursor['cursor'].execute(search_sql)
 
         result = cursor['cursor'].fetchall()
@@ -50,7 +50,7 @@ def read_find_users(cliente, filtro):
             name_db = "USE "+pre_fix + cliente
             cursor['cursor'].execute(name_db)
 
-            search_sql = f"SELECT * FROM usuarios where nombre like '%{filtro}%'"
+            search_sql = f"SELECT * FROM usuarios where nombre like '%{filtro}%' and eliminado_por is null and fecha_eliminacion is null"
             cursor['cursor'].execute(search_sql)
 
             result = cursor['cursor'].fetchall()
@@ -76,7 +76,27 @@ def update_user(id_user, user_log, cliente, correo, nombre, contrasena, rol):
 
         return {"resultado":"ok"}
     except:
+        cursor['connection'].rollback()
+        return {"resultado":"Error al actualizar los datos, Posibles razones, el correo ya existe, existen campos con una longitud erronea"}
+
+def delete_user(cliente, id_user, user_log):
+    try:
+        cursor = conec_exit(cliente)
+        pre_fix = "db_"
+        name_db = "USE "+pre_fix + cliente
+        cursor['cursor'].execute(name_db)
+
+        fecha_update = datetime.now()
+
+        delete_user_sql = f"UPDATE usuarios SET eliminado_por = {user_log}, fecha_eliminacion =  '{fecha_update}' where id = {id_user} "
+
+        cursor['cursor'].execute(delete_user_sql)
+        cursor['connection'].commit()
+
+        return {"resultado":"ok"}
+    except:
+        cursor['connection'].rollback()
         return {"resultado":"Error al actualizar los datos"}
-
-
+          
+     
     

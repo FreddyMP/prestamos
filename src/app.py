@@ -1,7 +1,7 @@
 from flask import Flask, request, jsonify
 from config.config import exist, conec_exit
 from models.empresas import list_all, create_db
-from models.usuarios import create_user, read_all_users, update_user, read_find_users
+from models.usuarios import create_user, read_all_users, update_user, read_find_users, delete_user
 app = Flask(__name__)
 
 @app.route("/exist/<empresa>/")
@@ -80,6 +80,33 @@ def update_usuario():
         
     else:
         return jsonify({"error": "Solicitud no contiene datos JSON."}), 400
+    
+@app.route("/delete_usuario", methods=['DELETE'])
+def delete_usuario():
+    if request.json:
+        data = request.get_json()
+        campos = ['id_user','user_log','cliente']
+        lista = {}
+        resultado = ''
+        contador = 0
+        conteo = len(campos)
+
+        while contador < conteo:
+            if campos[contador] in data:
+                lista[campos[contador]] = data[campos[contador]]
+            else:
+                resultado = {"resultado":f"No se encontro el campo '{campos[contador]}' en el json"}
+            contador = contador + 1
+
+        if resultado =='':
+            delete = delete_user(lista['cliente'], lista['id_user'], lista['user_log']) 
+            return delete
+        else:
+            return resultado
+        
+    else:
+        return jsonify({"error": "Solicitud no contiene datos JSON."}), 400
+      
       
 
 if __name__ == '__main__':
