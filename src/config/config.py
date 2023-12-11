@@ -24,18 +24,6 @@ def exist(nombre):
         
     except:
         return {'fail': "error en la consulta"}
-
-def conec_exit(nombre):
-    dba = exist(nombre)
-    existe = {'exist': dba['exist']}
-    if existe == 1:
-        db = pymysql.connect(host = '127.0.0.1', port = 3306, user = 'root', password = '', db = nombre)
-        cursor =  db.cursor(pymysql.cursors.DictCursor)
-        return {'cursor':cursor, 'connection': db}  
-    else:
-        db = pymysql.connect(host = '127.0.0.1', port = 3306, user = 'root', password = '')
-        cursor =  db.cursor(pymysql.cursors.DictCursor)
-        return {'cursor':cursor, 'connection': db} 
     
 def encriptar(texto_plano):
     # Crear un objeto hash SHA-256
@@ -50,8 +38,24 @@ def encriptar(texto_plano):
     # Obtener el hash en formato hexadecimal
     hash_resultado = sha256.hexdigest()
 
-    return hash_resultado
+    return hash_resultado   
 
+def conec_exit(nombre):
+    dba = exist(nombre)
+    existe = {'exist': dba['exist']}
+    if existe == 1:
+        db = pymysql.connect(host = '127.0.0.1', port = 3306, user = 'root', password = '', db = nombre)
+        cursor =  db.cursor(pymysql.cursors.DictCursor)
+        return {'cursor':cursor, 'connection': db}  
+    else:
+        db = pymysql.connect(host = '127.0.0.1', port = 3306, user = 'root', password = '')
+        cursor =  db.cursor(pymysql.cursors.DictCursor)
+        return {'cursor':cursor, 'connection': db} 
+
+def db_name(cliente):
+    pre_fix = "db_"
+    name = "USE "+pre_fix + cliente
+    return name
 
    
 

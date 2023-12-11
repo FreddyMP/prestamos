@@ -1,11 +1,12 @@
-from config.config import conec_exit, encriptar
+from config.config import conec_exit, encriptar, db_name
 from datetime import datetime
+
 def create_user(correo, nombre, contrasena, rol, creado_por, cliente):
     try:
         cursor = conec_exit(cliente)
 
-        pre_fix = "db_"
-        name_db = "USE "+pre_fix + cliente
+        name_db = db_name(cliente)
+
         cursor['cursor'].execute(name_db)
         password = encriptar(contrasena)
         sql_crear_usuario = f"INSERT INTO usuarios (correo, nombre, contrasena, id_rol, creado_por) VALUES ('{correo}', '{nombre}','{password}',{rol},{creado_por})"
@@ -31,9 +32,10 @@ def create_user(correo, nombre, contrasena, rol, creado_por, cliente):
         return {"resultado":"Error","Mensaje":mensaje}
     
 def read_all_users(cliente):
+        
         cursor = conec_exit(cliente)
-        pre_fix = "db_"
-        name_db = "USE "+pre_fix + cliente
+
+        name_db = db_name(cliente)
         cursor['cursor'].execute(name_db)
 
         search_sql = "SELECT * FROM usuarios where eliminado_por is null and fecha_eliminacion is null "
@@ -46,8 +48,8 @@ def read_all_users(cliente):
 def read_find_users(cliente, filtro):
         try:
             cursor = conec_exit(cliente)
-            pre_fix = "db_"
-            name_db = "USE "+pre_fix + cliente
+            
+            name_db = db_name(cliente)
             cursor['cursor'].execute(name_db)
 
             search_sql = f"SELECT * FROM usuarios where nombre like '%{filtro}%' and eliminado_por is null and fecha_eliminacion is null"
@@ -62,8 +64,8 @@ def read_find_users(cliente, filtro):
 def update_user(id_user, user_log, cliente, correo, nombre, contrasena, rol):
     try:
         cursor = conec_exit(cliente)
-        pre_fix = "db_"
-        name_db = "USE "+pre_fix + cliente
+        
+        name_db = db_name(cliente)
         cursor['cursor'].execute(name_db)
 
         fecha_update = datetime.now()
@@ -82,8 +84,9 @@ def update_user(id_user, user_log, cliente, correo, nombre, contrasena, rol):
 def delete_user(cliente, id_user, user_log):
     try:
         cursor = conec_exit(cliente)
-        pre_fix = "db_"
-        name_db = "USE "+pre_fix + cliente
+        
+        name_db = db_name(cliente)
+
         cursor['cursor'].execute(name_db)
 
         fecha_update = datetime.now()
@@ -97,6 +100,35 @@ def delete_user(cliente, id_user, user_log):
     except:
         cursor['connection'].rollback()
         return {"resultado":"Error al actualizar los datos"}
+    
+def log_in(cliente, usuario, contrasena):
+   
+    try:
+        cursor = conec_exit(cliente)
+
+        name_db = db_name(cliente)
+        user = usuario
+    
+        cursor['cursor'].execute(name_db)
+
+        password =  encriptar(contrasena)
+
+        sql_search_user = f"SELECT count(*) as verificado FROM usuarios WHERE correo ='{user}' AND contrasena = '{password}'"
+        cursor['cursor'].execute(sql_search_user)
+        login = cursor['cursor'].fetchone()
+
+        data_log = []
+        
+        if login['verificado'] == 1:
+            sql_data_log = f"SELECT id_rol, id, nombre FROM usuarios WHERE correo ='{user}' AND contrasena = '{password}'"
+            cursor['cursor'].execute(sql_data_log)
+            data_log = cursor['cursor'].fetchone()
+            
+        return data_log
+    except:
+        return {"verificado":0}
+
+    
           
      
     

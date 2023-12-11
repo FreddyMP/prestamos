@@ -1,7 +1,8 @@
 from flask import Flask, request, jsonify
 from config.config import exist, conec_exit
+from controllers.metodos import search_keys
 from models.empresas import list_all, create_db
-from models.usuarios import create_user, read_all_users, update_user, read_find_users, delete_user
+from models.usuarios import create_user, read_all_users, update_user, read_find_users, delete_user, log_in
 app = Flask(__name__)
 
 @app.route("/exist/<empresa>/")
@@ -56,6 +57,23 @@ def find_usuarios(cliente, filtro):
     return usuarios
 
 
+@app.route("/login/", methods=['POST'])
+def login():
+    if request.json:
+        data = request.get_json()
+        campos = ['usuario','cliente','contrasena']
+        lista = {}
+
+        search = search_keys(campos, data)
+
+        lista = search[1]
+
+        loguear = log_in(lista['cliente'], lista['usuario'], lista['contrasena'])
+        return loguear
+  
+    else:
+        return jsonify({"error": "Solicitud no contiene datos JSON."}), 400
+
 @app.route("/update_usuario", methods=['PUT'])
 def update_usuario():
     if request.json:
@@ -63,9 +81,10 @@ def update_usuario():
         campos = ['id_user','correo','user_log','cliente','nombre','contrasena','rol']
         lista = {}
         resultado = ''
+        conteo = len(campos)
 
         contador = 0
-        while contador < 7:
+        while contador < conteo:
             if campos[contador] in data:
                 lista[campos[contador]] = data[campos[contador]]
             else:
