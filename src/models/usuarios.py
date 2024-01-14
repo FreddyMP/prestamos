@@ -52,15 +52,31 @@ def read_find_users(cliente, filtro):
             name_db = db_name(cliente)
             cursor['cursor'].execute(name_db)
 
-            search_sql = f"SELECT * FROM usuarios where nombre like '%{filtro}%' and eliminado_por is null and fecha_eliminacion is null"
+            search_sql = f"SELECT  *, count(*) AS conteo FROM usuarios where nombre like '%{filtro}%' and eliminado_por is null and fecha_eliminacion is null"
             cursor['cursor'].execute(search_sql)
-
             result = cursor['cursor'].fetchall()
+
+            return  result
             
-            return result
-        except:
-            return {"Resultado":f"Error buscando '{filtro}'"}
+        except ValueError:
+            return ValueError
         
+def find_user(cliente, id_user):
+        try:
+            cursor = conec_exit(cliente)
+            
+            name_db = db_name(cliente)
+            cursor['cursor'].execute(name_db)
+
+            search_sql = f"SELECT  * FROM usuarios where id = {id_user} and eliminado_por is null and fecha_eliminacion is null"
+            cursor['cursor'].execute(search_sql)
+            result = cursor['cursor'].fetchall()
+
+            return  result
+            
+        except ValueError:
+            return ValueError  
+              
 def update_user(id_user, user_log, cliente, correo, nombre, contrasena, rol):
     try:
         cursor = conec_exit(cliente)
@@ -113,14 +129,14 @@ def log_in(cliente, usuario, contrasena):
 
         password =  encriptar(contrasena)
 
-        sql_search_user = f"SELECT count(*) as verificado FROM usuarios WHERE correo ='{user}' AND contrasena = '{password}'"
+        sql_search_user = f"SELECT count(*) as verificado FROM usuarios WHERE correo ='{user}' AND contrasena = '{password}' and fecha_eliminacion is null and eliminado_por is null"
         cursor['cursor'].execute(sql_search_user)
         login = cursor['cursor'].fetchone()
 
-        data_log = []
+        data_log = {}
         
         if login['verificado'] == 1:
-            sql_data_log = f"SELECT id_rol, id, nombre FROM usuarios WHERE correo ='{user}' AND contrasena = '{password}'"
+            sql_data_log = f"SELECT id_rol, id, nombre FROM usuarios WHERE correo ='{user}' AND contrasena = '{password}' and fecha_eliminacion is null and eliminado_por is null"
             cursor['cursor'].execute(sql_data_log)
             data_log = cursor['cursor'].fetchone()
             

@@ -15,3 +15,20 @@ def search_keys(campos, data):
         return ['1',lista]
     else:
         return ['0',resultado]
+
+
+def find(campos, data):
+    resultado = ''
+    conteo = len(campos)
+
+    contador = 0
+    while contador < conteo:
+        if campos[contador] != "cliente":
+            if contador + 1 == conteo:
+                resultado = resultado + campos[contador] + " like '%" + data[campos[contador]]+ "%' "
+            else:
+                resultado = resultado + campos[contador] + " like '%"+ data[campos[contador]] + "%' and "
+        contador = contador + 1
+
+    return resultado
+        
