@@ -294,5 +294,5 @@ def delete_prestamo():
 
 
 if __name__ == '__main__':
-    serve(app, host="127.0.0.1", port=3000)
+    serve(app, host="137.184.88.96", port=3000)
     #app.run(port = 3000, debug=False)
