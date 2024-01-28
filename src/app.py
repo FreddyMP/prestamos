@@ -8,7 +8,7 @@ from models.usuarios import create_user, read_all_users, update_user, read_find_
 app = Flask(__name__)
 
 @app.route("/")
-def index():
+def home():
     
     return 'Bienvenido al test'
 
