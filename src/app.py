@@ -1,7 +1,6 @@
 from flask import Flask, request, jsonify
 from config.config import exist, conec_exit
 from controllers.metodos import search_keys, find,not_empty
-from waitress import serve
 from models.empresas import list_all, create_db
 from models.clientes import create_customers, read_all_customers, read_find_customers, update_customers, delete_customers
 from models.prestamos import create_prestamo, read_all_prestamos, read_find_prestamos, update_find_prestamo
@@ -10,8 +9,8 @@ app = Flask(__name__)
 
 @app.route("/")
 def home():
-    
-    return 'Bienvenido al test'
+    return 'Bienvenido a Prestamos'
+
 
 @app.route("/exist/<empresa>/")
 def index(empresa):
@@ -294,5 +293,4 @@ def delete_prestamo():
 
 
 if __name__ == '__main__':
-    serve(app, host="137.184.88.96", port=3000)
-    #app.run(port = 3000, debug=False)
+    app.run(host="137.184.88.96", port = 3000, debug=True)
