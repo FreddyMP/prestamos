@@ -1,9 +1,9 @@
 from flask import Flask, request, jsonify
 from config.config import exist, conec_exit
-from controllers.metodos import search_keys, find
+from controllers.metodos import search_keys, find,not_empty
 from models.empresas import list_all, create_db
 from models.clientes import create_customers, read_all_customers, read_find_customers, update_customers, delete_customers
-from models.prestamos import create_prestamo, read_all_prestamos, read_find_prestamos
+from models.prestamos import create_prestamo, read_all_prestamos, read_find_prestamos, update_find_prestamo
 from models.usuarios import create_user, read_all_users, update_user, read_find_users, delete_user, log_in, find_user
 app = Flask(__name__)
 
@@ -229,9 +229,62 @@ def find_prestamos():
     campos = ['cliente','identificacion', 'nombre','apellido']
 
     cliente = data["cliente"]
+    id = data["id"]
     filtros = find(campos, data)
-    prestamos_find =  read_find_prestamos(cliente, filtros)
+    prestamos_find =  read_find_prestamos(cliente, filtros, id)
     return prestamos_find
+
+@app.route("/update_prestamo", methods=['PUT'])
+def update_prestamo():
+    if request.json:
+        data = request.get_json()
+        campos = ['cliente', 'user_log', 'valor_de_prestamo', 'balance_actual', 'frecuencia_de_interes', 'tasa_de_interes', 'fecha_cambio_tasa_de_interes', 'tipo_de_amortizacion', 'tiempo_de_prestamo', 'aplica_garantia']
+        campos_not_null =  ['cliente', 'user_log', 'valor_de_prestamo', 'balance_actual', 'frecuencia_de_interes', 'tasa_de_interes', 'tipo_de_amortizacion', 'tiempo_de_prestamo', 'aplica_garantia']
+        lista = {}
+
+        no_nulos = not_empty(campos_not_null, data )
+
+        search = search_keys(campos, data)
+
+        lista = search[1]
+        id_prestamo = data['id_prestamo']
+        if search[0] == '0':
+            return search[1] 
+        else:
+            if no_nulos[0] == "1":
+                prestamo_update = update_find_prestamo(lista['cliente'], id_prestamo, lista['valor_de_prestamo'], lista['balance_actual'],  lista['frecuencia_de_interes'], lista['tasa_de_interes'], lista['fecha_cambio_tasa_de_interes'], lista['tipo_de_amortizacion'] , lista['tiempo_de_prestamo'], lista['aplica_garantia'], lista['user_log']) 
+                return prestamo_update
+            else:
+                return no_nulos[1]
+        
+    else:
+        return jsonify({"error": "Solicitud no contiene datos JSON."}), 400
+    
+@app.route("/delete_prestamo", methods=['DELETE'])
+def delete_prestamo():
+    if request.json:
+        data = request.get_json()
+        campos = ['id_prestamo','user_log','cliente']
+        campos_not_null = ['id_prestamo','user_log','cliente']
+        lista = {}
+
+        no_nulos = not_empty(campos_not_null, data )
+        search = search_keys(campos, data)
+
+        lista = search[1]
+        
+        if search[0] == '0':
+            return search[1] 
+        else:
+            if no_nulos[0] == "1":
+                delete = delete_customers(lista['cliente'], lista['id_cliente'], lista['user_log']) 
+                return delete
+            else:
+                return no_nulos[1]
+        
+    else:
+        return jsonify({"error": "Solicitud no contiene datos JSON."}), 400
+
 
 
 if __name__ == '__main__':

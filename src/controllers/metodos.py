@@ -32,3 +32,19 @@ def find(campos, data):
 
     return resultado
         
+def not_empty(campos, data):
+    lista = {}
+    resultado = ''
+    conteo = len(campos)
+
+    contador = 0
+    while contador < conteo:
+        if campos[contador] in data:
+            if data[campos[contador]] == '':
+                resultado = {"resultado":f"El campo '{campos[contador]}' no puede estar vacio"}
+        contador = contador + 1
+
+    if resultado =='':
+        return ['1']
+    else:
+        return ['0',resultado]
