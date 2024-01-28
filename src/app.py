@@ -1,4 +1,4 @@
-from python-flask import Flask, request, jsonify
+from Flask import Flask, request, jsonify
 from config.config import exist, conec_exit
 from controllers.metodos import search_keys, find,not_empty
 from models.empresas import list_all, create_db
