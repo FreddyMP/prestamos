@@ -9,7 +9,7 @@ def create_user(correo, nombre, contrasena, rol, creado_por, cliente):
 
         cursor['cursor'].execute(name_db)
         password = encriptar(contrasena)
-        sql_crear_usuario = f"INSERT INTO usuarios (correo, nombre, contrasena, id_rol, creado_por) VALUES ('{correo}', '{nombre}','{password}',{rol},{creado_por})"
+        sql_crear_usuario = f"INSERT INTO Usuarios (correo, nombre, contrasena, id_rol, creado_por) VALUES ('{correo}', '{nombre}','{password}',{rol},{creado_por})"
         cursor['cursor'].execute(sql_crear_usuario)
 
         cursor['connection'].commit()
@@ -17,7 +17,7 @@ def create_user(correo, nombre, contrasena, rol, creado_por, cliente):
         return  {"Resultado":password}
         
     except:
-        search_error_sql = """SELECT * FROM usuarios"""
+        search_error_sql = """SELECT * FROM Usuarios"""
         cursor['cursor'].execute(search_error_sql)
 
         result = cursor['cursor'].fetchall()
@@ -38,7 +38,7 @@ def read_all_users(cliente):
         name_db = db_name(cliente)
         cursor['cursor'].execute(name_db)
 
-        search_sql = "SELECT * FROM usuarios where eliminado_por is null and fecha_eliminacion is null "
+        search_sql = "SELECT * FROM Usuarios where eliminado_por is null and fecha_eliminacion is null "
         cursor['cursor'].execute(search_sql)
 
         result = cursor['cursor'].fetchall()
@@ -52,7 +52,7 @@ def read_find_users(cliente, filtro):
             name_db = db_name(cliente)
             cursor['cursor'].execute(name_db)
 
-            search_sql = f"SELECT  *, count(*) AS conteo FROM usuarios where nombre like '%{filtro}%' and eliminado_por is null and fecha_eliminacion is null"
+            search_sql = f"SELECT  *, count(*) AS conteo FROM Usuarios where nombre like '%{filtro}%' and eliminado_por is null and fecha_eliminacion is null"
             cursor['cursor'].execute(search_sql)
             result = cursor['cursor'].fetchall()
 
@@ -68,7 +68,7 @@ def find_user(cliente, id_user):
             name_db = db_name(cliente)
             cursor['cursor'].execute(name_db)
 
-            search_sql = f"SELECT  * FROM usuarios where id = {id_user} and eliminado_por is null and fecha_eliminacion is null"
+            search_sql = f"SELECT  * FROM Usuarios where id = {id_user} and eliminado_por is null and fecha_eliminacion is null"
             cursor['cursor'].execute(search_sql)
             result = cursor['cursor'].fetchall()
 
@@ -107,7 +107,7 @@ def delete_user(cliente, id_user, user_log):
 
         fecha_update = datetime.now()
 
-        delete_user_sql = f"UPDATE usuarios SET eliminado_por = {user_log}, fecha_eliminacion =  '{fecha_update}' where id = {id_user} "
+        delete_user_sql = f"UPDATE Usuarios SET eliminado_por = {user_log}, fecha_eliminacion =  '{fecha_update}' where id = {id_user} "
 
         cursor['cursor'].execute(delete_user_sql)
         cursor['connection'].commit()
@@ -129,14 +129,14 @@ def log_in(cliente, usuario, contrasena):
 
         password =  encriptar(contrasena)
 
-        sql_search_user = f"SELECT count(*) as verificado FROM usuarios WHERE correo ='{user}' AND contrasena = '{password}' and fecha_eliminacion is null and eliminado_por is null"
+        sql_search_user = f"SELECT count(*) as verificado FROM Usuarios WHERE correo ='{user}' AND contrasena = '{password}' and fecha_eliminacion is null and eliminado_por is null"
         cursor['cursor'].execute(sql_search_user)
         login = cursor['cursor'].fetchone()
 
         data_log = {}
         
         if login['verificado'] == 1:
-            sql_data_log = f"SELECT id_rol, id, nombre FROM usuarios WHERE correo ='{user}' AND contrasena = '{password}' and fecha_eliminacion is null and eliminado_por is null"
+            sql_data_log = f"SELECT id_rol, id, nombre FROM Usuarios WHERE correo ='{user}' AND contrasena = '{password}' and fecha_eliminacion is null and eliminado_por is null"
             cursor['cursor'].execute(sql_data_log)
             data_log = cursor['cursor'].fetchone()
             
