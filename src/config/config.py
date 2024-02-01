@@ -2,7 +2,7 @@ import pymysql
 import hashlib
 
 def exist(nombre):
-    db = pymysql.connect(host= 'localhost', port= 3306, user= 'root', password='')
+    db = pymysql.connect(host= 'localhost', port= 3306, user= 'fpereyra', password='15951236487')
 
     cursor =  db.cursor(pymysql.cursors.DictCursor)
 
