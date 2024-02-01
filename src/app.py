@@ -1,4 +1,5 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify 
+from flask_cors import CORS
 from config.config import exist, conec_exit
 from controllers.metodos import search_keys, find,not_empty
 from models.empresas import list_all, create_db
@@ -6,6 +7,10 @@ from models.clientes import create_customers, read_all_customers, read_find_cust
 from models.prestamos import create_prestamo, read_all_prestamos, read_find_prestamos, update_find_prestamo
 from models.usuarios import create_user, read_all_users, update_user, read_find_users, delete_user, log_in, find_user
 app = Flask(__name__)
+
+cors = CORS(app, resources={r"/*": {"origins": "*"}})
+
+
 
 @app.route("/")
 def home():
