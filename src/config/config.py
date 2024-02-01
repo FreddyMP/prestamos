@@ -3,7 +3,6 @@ import hashlib
 
 def exist(nombre):
     db = pymysql.connect(host= 'localhost', port= 3306, user= 'fpereyra', password='15951236487')
-
     cursor =  db.cursor(pymysql.cursors.DictCursor)
 
     existencia_db = f"SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = '{nombre}'"
