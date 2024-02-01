@@ -7,7 +7,7 @@ from models.clientes import create_customers, read_all_customers, read_find_cust
 from models.prestamos import create_prestamo, read_all_prestamos, read_find_prestamos, update_find_prestamo
 from models.usuarios import create_user, read_all_users, update_user, read_find_users, delete_user, log_in, find_user
 app = Flask(__name__)
-
+CORS(app)
 cors = CORS(app, resources={r"/*": {"origins": "*"}})
 
 
