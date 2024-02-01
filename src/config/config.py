@@ -52,7 +52,7 @@ def conec_exit(nombre):
         return {'cursor':cursor, 'connection': db} 
 
 def db_name(cliente):
-    pre_fix = "db_"
+    pre_fix = "DB_"
     name = "USE "+pre_fix + cliente
     return name
 
