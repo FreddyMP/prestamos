@@ -87,7 +87,7 @@ def update_user(id_user, user_log, cliente, correo, nombre, contrasena, rol):
         fecha_update = datetime.now()
         password = encriptar(contrasena)
 
-        update_user_sql = f"UPDATE usuarios SET correo ='{correo}', nombre = '{nombre}', contrasena = '{password}', id_rol = {rol}, modificado_por = {user_log}, fecha_modificacion = '{fecha_update}' where id = {id_user} "
+        update_user_sql = f"UPDATE Usuarios SET correo ='{correo}', nombre = '{nombre}', contrasena = '{password}', id_rol = {rol}, modificado_por = {user_log}, fecha_modificacion = '{fecha_update}' where id = {id_user} "
 
         cursor['cursor'].execute(update_user_sql)
         cursor['connection'].commit()
