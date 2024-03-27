@@ -31,13 +31,12 @@ def read_all_customers(cliente):
 
     cursor["cursor"].execute(name_db)
     
-    sql_all_customers = "select * from clientes where fecha_eliminacion is null and eliminado_por is null"
+    sql_all_customers = "select * from Clientes where fecha_eliminacion is null and eliminado_por is null"
     cursor["cursor"].execute(sql_all_customers)
 
     clientes = cursor["cursor"].fetchall()
 
     return clientes
-
 
 def read_find_customers(cliente, filtros):
     cursor = conec_exit(cliente)
@@ -46,13 +45,12 @@ def read_find_customers(cliente, filtros):
 
     cursor["cursor"].execute(name_db)
     
-    sql_all_customers = "select * from clientes where fecha_eliminacion is null and eliminado_por is null and " + filtros
+    sql_all_customers = "select * from Clientes where fecha_eliminacion is null and eliminado_por is null and " + filtros
     cursor["cursor"].execute(sql_all_customers)
 
     clientes = cursor["cursor"].fetchall()
 
     return clientes
-
 
 def update_customers(cliente, id_cliente, nombre, apellido, cedula, identificacion_garante, direccion, ocupacion, ingresos, telefono1, telefono2, correo, lugar_trabajo, user_log):
     try:
@@ -64,7 +62,7 @@ def update_customers(cliente, id_cliente, nombre, apellido, cedula, identificaci
 
         fecha_update = datetime.now()
 
-        sql_update_cliente = f"""UPDATE clientes SET
+        sql_update_cliente = f"""UPDATE Clientes SET
                                 nombre = '{nombre}' , apellido = '{apellido}', identificacion = '{cedula}', identificacion_garante = '{identificacion_garante}', direccion = '{direccion}',
                                 ocupacion = '{ocupacion}', ingresos = '{ingresos}', telefono1 = '{telefono1}', telefono2 = '{telefono2}', correo = '{correo}', lugar_de_trabajo = '{lugar_trabajo}',
                                 modificado_por= '{user_log}', fecha_modificacion = '{fecha_update}' WHERE id = '{id_cliente}'
@@ -88,7 +86,7 @@ def delete_customers(cliente, id_cliente, user_log):
 
         fecha_update = datetime.now()
 
-        sql_update_cliente = f"UPDATE clientes SET eliminado_por= '{user_log}', fecha_eliminacion = '{fecha_update}' WHERE id = '{id_cliente}'"
+        sql_update_cliente = f"UPDATE Clientes SET eliminado_por= '{user_log}', fecha_eliminacion = '{fecha_update}' WHERE id = '{id_cliente}'"
         
         cursor["cursor"].execute(sql_update_cliente)
         cursor['connection'].commit()
