@@ -9,7 +9,7 @@ def create_customers(cliente ,nombre, apellido, cedula, identificacion_garante, 
 
         cursor["cursor"].execute(name_db)
 
-        sql_create_cliente = f"""INSERT INTO clientes 
+        sql_create_cliente = f"""INSERT INTO Clientes 
                                 (nombre, apellido, identificacion, identificacion_garante, direccion, ocupacion, ingresos, telefono1, telefono2, correo, lugar_de_trabajo, creado_por)
                                 VALUES
                                 ('{nombre}','{apellido}','{cedula}','{identificacion_garante}','{direccion}','{ocupacion}','{ingresos}','{telefono1}',
