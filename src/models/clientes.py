@@ -53,7 +53,7 @@ def read_find_customers(cliente, filtros):
 
         return clientes
     except:
-        return {"Error":"No fue posible esta consulta"}
+        return {"Error":"No fue posible esta consulta","Resultado":"No hay data"}
 
 
 def update_customers(cliente, id_cliente, nombre, apellido, cedula, identificacion_garante, direccion, ocupacion, ingresos, telefono1, telefono2, correo, lugar_trabajo, user_log):
