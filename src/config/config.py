@@ -2,7 +2,7 @@ import pymysql
 import hashlib
 
 def exist(nombre):
-    db = pymysql.connect(host= 'localhost', port= 3306, user= 'root', password='')
+    db = pymysql.connect(host= 'localhost', port= 3306, user= 'fpereyra', password='15951236487')
     cursor =  db.cursor(pymysql.cursors.DictCursor)
 
     existencia_db = f"SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = '{nombre}'"
@@ -43,11 +43,11 @@ def conec_exit(nombre):
     dba = exist(nombre)
     existe = {'exist': dba['exist']}
     if existe == 1:
-        db = pymysql.connect(host = '127.0.0.1', port = 3306, user = 'root', password = '', db = nombre)
+        db = pymysql.connect(host = '127.0.0.1', port = 3306, user = 'fpereyra', password = '15951236487', db = nombre)
         cursor =  db.cursor(pymysql.cursors.DictCursor)
         return {'cursor':cursor, 'connection': db}  
     else:
-        db = pymysql.connect(host = '127.0.0.1', port = 3306, user = 'root', password = '')
+        db = pymysql.connect(host = '127.0.0.1', port = 3306, user = 'fpereyra', password = '15951236487')
         cursor =  db.cursor(pymysql.cursors.DictCursor)
         return {'cursor':cursor, 'connection': db} 
 
