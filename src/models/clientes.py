@@ -39,18 +39,22 @@ def read_all_customers(cliente):
     return clientes
 
 def read_find_customers(cliente, filtros):
-    cursor = conec_exit(cliente)
+    try:
+        cursor = conec_exit(cliente)
+            
+        name_db = db_name(cliente)
+
+        cursor["cursor"].execute(name_db)
         
-    name_db = db_name(cliente)
+        sql_all_customers = "select * from Clientes where fecha_eliminacion is null and eliminado_por is null and " + filtros
+        cursor["cursor"].execute(sql_all_customers)
 
-    cursor["cursor"].execute(name_db)
-    
-    sql_all_customers = "select * from Clientes where fecha_eliminacion is null and eliminado_por is null and " + filtros
-    cursor["cursor"].execute(sql_all_customers)
+        clientes = cursor["cursor"].fetchall()
 
-    clientes = cursor["cursor"].fetchall()
+        return clientes
+    except:
+        return [{"Error":"Error"}]
 
-    return clientes
 
 def update_customers(cliente, id_cliente, nombre, apellido, cedula, identificacion_garante, direccion, ocupacion, ingresos, telefono1, telefono2, correo, lugar_trabajo, user_log):
     try:
