@@ -25,9 +25,15 @@ def find(campos, data):
     while contador < conteo:
         if campos[contador] != "cliente":
             if contador + 1 == conteo:
-                resultado = resultado + campos[contador] + " like '%" + data[campos[contador]]+ "%' "
+                if campos[contador] != "id":
+                    resultado = resultado + campos[contador] + " like '%" + data[campos[contador]]+ "%' "
+                else:
+                    resultado = resultado + campos[contador] + " = '" + data[campos[contador]]+ "' "
             else:
-                resultado = resultado + campos[contador] + " like '%"+ data[campos[contador]] + "%' and "
+                if campos[contador] != "id":
+                    resultado = resultado + campos[contador] + " like '%"+ data[campos[contador]] + "%' and "
+                else:
+                    resultado = resultado + campos[contador] + " = '"+ data[campos[contador]] + "' and " 
         contador = contador + 1
 
     return resultado
